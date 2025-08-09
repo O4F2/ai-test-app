@@ -53,7 +53,7 @@ const AdBanner = () => {
   }, []);
 
   return (
-    <div className="mt-8 bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center max-w-md mx-4 border border-white/30">
+    <div className={`transition-all duration-300 ${adLoaded ? 'mt-8 bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center max-w-md mx-4 border border-white/30' : 'hidden'}`}>
       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7545352297994538"
            crossOrigin="anonymous"></script>
       {/* ad1 */}
@@ -63,14 +63,6 @@ const AdBanner = () => {
            data-ad-slot="2445419028"
            data-ad-format="auto"
            data-full-width-responsive="true"></ins>
-      
-      {/* 광고가 로드되지 않았을 때 대체 콘텐츠 */}
-      {!adLoaded && (
-        <div className="text-pink-500 font-medium mb-1 text-sm">
-          <div className="text-pink-500 font-medium mb-1">광고</div>
-          <div className="text-gray-600">더 많은 재밌는 테스트가 곧 찾아와요!</div>
-        </div>
-      )}
     </div>
   );
 };
@@ -140,7 +132,7 @@ export default function Home() {
         AI 구분력 테스트
       </header>
 
-      <main className="flex-1 flex flex-col mt-20 px-4 pb-4 max-w-lg mx-auto w-full">
+      <main className="flex-1 flex flex-col mt-20 px-2 pb-4 max-w-lg mx-auto w-full">
       {step === "intro" && (
           <div className="flex flex-col items-center justify-center flex-1">
             <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-8 text-center max-w-md mx-4 border border-white/20">
@@ -164,9 +156,9 @@ export default function Home() {
         )}
 
         {step === "quiz" && shuffledQuestions.length > 0 && (
-          <div className="flex flex-col flex-1 py-4">
+          <div className="flex flex-col h-full py-2">
             {/* 진행도 표시 */}
-            <div className="mb-6">
+            <div className="mb-4 flex-shrink-0">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-sm text-white/80 font-medium">문제 {current + 1}</span>
                 <span className="text-sm text-white/80 font-medium">{shuffledQuestions.length}개 중</span>
@@ -180,22 +172,22 @@ export default function Home() {
             </div>
 
             {/* Tinder 스타일 카드 */}
-            <div className="flex-1 flex items-center justify-center mb-8">
-              <div className="relative w-full max-w-md">
-                <div className="bg-white rounded-3xl shadow-2xl p-6 mx-4 transform hover:rotate-1 transition-transform duration-300 border-4 border-white/50">
+            <div className="flex-1 flex items-center justify-center mb-4">
+              <div className="relative w-full max-w-sm">
+                <div className="bg-white rounded-3xl shadow-2xl p-4 mx-2 transform hover:rotate-1 transition-transform duration-300 border-4 border-white/50">
                   <div className="relative">
                     <Image
                       src={shuffledQuestions[current].content}
                       alt="문제 이미지"
                       width={400}
-                      height={384}
-                      className="w-full h-96 object-cover rounded-2xl shadow-md"
+                      height={300}
+                      className="w-full h-64 object-cover rounded-2xl shadow-md"
                       priority
                     />
                   </div>
                   
-                  <div className="mt-6 text-center">
-                    <h3 className="text-xl font-bold text-gray-800 mb-3">
+                  <div className="mt-4 text-center">
+                    <h3 className="text-lg font-bold text-gray-800">
                       AI 생성 이미지일까요?
                     </h3>
                   </div>
@@ -203,9 +195,8 @@ export default function Home() {
               </div>
             </div>
 
-
             {/* 답변 버튼 */}
-            <div className="flex justify-center gap-4 mb-8 px-4">
+            <div className="flex justify-center gap-3 px-2 flex-shrink-0">
               <button
                 onClick={() => handleAnswer("AI")}
                 disabled={selected !== null}
