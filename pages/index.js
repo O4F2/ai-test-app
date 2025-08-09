@@ -35,11 +35,20 @@ const generateQuestions = () => {
 // ** AdBanner 컴포넌트 **
 // 구글 광고를 표시하기 위한 전용 컴포넌트입니다.
 const AdBanner = () => {
+  const [adLoaded, setAdLoaded] = useState(false);
+
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
+      // 광고 로드 체크를 위한 타이머
+      setTimeout(() => {
+        const adElements = document.querySelectorAll('.adsbygoogle');
+        const hasContent = Array.from(adElements).some(el => el.innerHTML.trim() !== '');
+        setAdLoaded(hasContent);
+      }, 2000);
     } catch (e) {
       console.error("Adsense error:", e);
+      setAdLoaded(false);
     }
   }, []);
 
@@ -49,17 +58,25 @@ const AdBanner = () => {
            crossOrigin="anonymous"></script>
       {/* ad1 */}
       <ins className="adsbygoogle"
-           style={{display:"block"}}
+           style={{display:"block", minHeight: "100px"}}
            data-ad-client="ca-pub-7545352297994538"
            data-ad-slot="2445419028"
            data-ad-format="auto"
            data-full-width-responsive="true"></ins>
+      
+      {/* 광고가 로드되지 않았을 때 대체 콘텐츠 */}
+      {!adLoaded && (
+        <div className="text-pink-500 font-medium mb-1 text-sm">
+          <div className="text-pink-500 font-medium mb-1">광고</div>
+          <div className="text-gray-600">더 많은 재밌는 테스트가 곧 찾아와요!</div>
+        </div>
+      )}
     </div>
   );
 };
 
 
-const questions = generateQuestions();
+// const questions = generateQuestions(); // 더 이상 사용하지 않음 (shuffledQuestions 사용)
 
 export default function Home() {
   const [step, setStep] = useState("intro"); // intro | quiz | result
