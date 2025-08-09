@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Head from 'next/head'; // Head 태그 관리를 위해 import
 import Image from 'next/image'; // Next.js Image 컴포넌트 import
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from '@vercel/analytics/next';
 import { track } from '@vercel/analytics';
 
 // 폴더 기반 문제 생성 함수 (기존과 동일)
