@@ -68,6 +68,7 @@ export default function Home() {
   const [selected, setSelected] = useState(null);
   const [showResultIcon, setShowResultIcon] = useState(null); // "O" | "X"
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // 컴포넌트가 처음 로드될 때 문제를 한번만 섞습니다.
   useEffect(() => {
@@ -86,7 +87,7 @@ export default function Home() {
   }
 
   const handleAnswer = (choice) => {
-    if (selected) return;
+    if (selected || !imageLoaded) return; // 이미지 로드 완료 후에만 답변 가능
     setSelected(choice);
 
     const isCorrect = choice === shuffledQuestions[current].answer;
@@ -97,6 +98,7 @@ export default function Home() {
     setTimeout(() => {
       setShowResultIcon(null);
       setSelected(null);
+      setImageLoaded(false); // 다음 문제로 넘어갈 때 이미지 로딩 상태 리셋
       if (current + 1 < shuffledQuestions.length) {
         setCurrent(current + 1);
       } else {
@@ -219,7 +221,17 @@ export default function Home() {
                       height={300}
                       className="w-full h-64 object-cover rounded-2xl shadow-md"
                       priority
+                      onLoad={() => setImageLoaded(true)}
+                      onError={() => setImageLoaded(false)}
                     />
+                    {!imageLoaded && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-2xl">
+                        <div className="text-gray-400 text-center">
+                          <div className="animate-spin w-8 h-8 border-4 border-gray-300 border-t-pink-500 rounded-full mx-auto mb-2"></div>
+                          <div className="text-sm">이미지 로딩중...</div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   
                   <div className="mt-4 text-center">
@@ -235,14 +247,16 @@ export default function Home() {
             <div className="flex justify-center gap-3 px-2 flex-shrink-0">
               <button
                 onClick={() => handleAnswer("AI")}
-                disabled={selected !== null}
+                disabled={selected !== null || !imageLoaded}
                 className={`flex-1 max-w-36 py-4 px-4 rounded-2xl shadow-xl font-bold transition-all duration-300 transform flex flex-col items-center gap-2 ${
                   selected === "AI"
                     ? selected === shuffledQuestions[current].answer
                       ? "bg-green-500 text-white scale-105 shadow-green-500/50"
                       : "bg-red-500 text-white scale-105 shadow-red-500/50"
-                    : "bg-gradient-to-br from-purple-500 to-indigo-600 text-white hover:scale-105 hover:shadow-purple-500/50 active:scale-95"
-                } ${selected !== null ? "cursor-not-allowed opacity-75" : "cursor-pointer"}`}
+                    : !imageLoaded
+                      ? "bg-gray-400 text-gray-200 cursor-not-allowed opacity-50"
+                      : "bg-gradient-to-br from-purple-500 to-indigo-600 text-white hover:scale-105 hover:shadow-purple-500/50 active:scale-95 cursor-pointer"
+                } ${(selected !== null || !imageLoaded) ? "cursor-not-allowed opacity-75" : "cursor-pointer"}`}
               >
                 <div className="text-3xl">🤖</div>
                 <div className="text-sm font-medium">AI 생성</div>
@@ -250,14 +264,16 @@ export default function Home() {
               
               <button
                 onClick={() => handleAnswer("human")}
-                disabled={selected !== null}
+                disabled={selected !== null || !imageLoaded}
                 className={`flex-1 max-w-36 py-4 px-4 rounded-2xl shadow-xl font-bold transition-all duration-300 transform flex flex-col items-center gap-2 ${
                   selected === "human"
                     ? selected === shuffledQuestions[current].answer
                       ? "bg-green-500 text-white scale-105 shadow-green-500/50"
                       : "bg-red-500 text-white scale-105 shadow-red-500/50"
-                    : "bg-gradient-to-br from-pink-500 to-red-500 text-white hover:scale-105 hover:shadow-pink-500/50 active:scale-95"
-                } ${selected !== null ? "cursor-not-allowed opacity-75" : "cursor-pointer"}`}
+                    : !imageLoaded
+                      ? "bg-gray-400 text-gray-200 cursor-not-allowed opacity-50"
+                      : "bg-gradient-to-br from-pink-500 to-red-500 text-white hover:scale-105 hover:shadow-pink-500/50 active:scale-95 cursor-pointer"
+                } ${(selected !== null || !imageLoaded) ? "cursor-not-allowed opacity-75" : "cursor-pointer"}`}
               >
                 <div className="text-3xl">👨‍💻</div>
                 <div className="text-sm font-medium">인간 창작</div>
