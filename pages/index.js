@@ -35,25 +35,16 @@ const generateQuestions = () => {
 // ** AdBanner 컴포넌트 **
 // 구글 광고를 표시하기 위한 전용 컴포넌트입니다.
 const AdBanner = () => {
-  const [adLoaded, setAdLoaded] = useState(false);
-
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-      // 광고 로드 체크를 위한 타이머
-      setTimeout(() => {
-        const adElements = document.querySelectorAll('.adsbygoogle');
-        const hasContent = Array.from(adElements).some(el => el.innerHTML.trim() !== '');
-        setAdLoaded(hasContent);
-      }, 2000);
     } catch (e) {
       console.error("Adsense error:", e);
-      setAdLoaded(false);
     }
   }, []);
 
   return (
-    <div className={`transition-all duration-300 ${adLoaded ? 'mt-8 bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center max-w-md mx-4 border border-white/30' : 'hidden'}`}>
+    <div className="mt-8 bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center max-w-md mx-4 border border-white/30">
       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7545352297994538"
            crossOrigin="anonymous"></script>
       {/* ad1 */}
