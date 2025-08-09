@@ -294,26 +294,27 @@ export default function Home() {
 
               {/* 액션 버튼들 */}
               <div className="space-y-3">
-                <button
-                  onClick={() => {
-                    const shareText = `난 ${score}점, 넌 몇점? 👀 내 'AI 구분력 점수' 확인하고 너도 테스트 해봐!`;
-                    const pageUrl = window.location.href;
+              <button
+    onClick={() => {
+        // 작은따옴표를 쌍따옴표로 수정하여 빌드 에러 해결
+        const shareText = `난 ${score}점, 넌 몇점? 👀 내 "AI 구분력 점수" 확인하고 너도 테스트 해봐!`;
+        const pageUrl = window.location.href;
 
-                    if (navigator.share) {
-                      navigator.share({
-                        title: "AI 구분력 테스트",
-                        text: shareText,
-                        url: pageUrl
-                      }).catch(console.error);
-                    } else {
-                      navigator.clipboard.writeText(`${shareText}\n${pageUrl}`);
-                      alert("결과가 클립보드에 복사되었어요. 친구에게 붙여넣기 해주세요!");
-                    }
-                  }}
-                  className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 active:scale-95"
-                >
-                  결과 공유하고 친구 놀리기
-                </button>
+        if (navigator.share) {
+            navigator.share({
+            title: "AI 구분력 테스트",
+            text: shareText,
+            url: pageUrl
+            }).catch(console.error);
+        } else {
+            navigator.clipboard.writeText(`${shareText}\n${pageUrl}`);
+            alert("결과가 클립보드에 복사되었어요. 친구에게 붙여넣기 해주세요!");
+        }
+    }}
+    className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 active:scale-95"
+>
+    결과 공유하기
+</button>
                 
                 <button
                   onClick={handleRestart}
