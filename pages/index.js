@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import Head from 'next/head'; // Head 태그 관리를 위해 import
 import Image from 'next/image'; // Next.js Image 컴포넌트 import
+import { Analytics } from '@vercel/analytics/react';
+import { track } from '@vercel/analytics';
 
 // 폴더 기반 문제 생성 함수 (기존과 동일)
 const generateQuestions = () => {
@@ -93,6 +95,13 @@ export default function Home() {
     const isCorrect = choice === shuffledQuestions[current].answer;
     if (isCorrect) setScore(score + 1);
 
+    // 답변 선택 추적
+    track('answer_selected', {
+      question: current + 1,
+      choice: choice,
+      correct: isCorrect
+    });
+
     setShowResultIcon(isCorrect ? "O" : "X");
 
     setTimeout(() => {
@@ -102,6 +111,11 @@ export default function Home() {
       if (current + 1 < shuffledQuestions.length) {
         setCurrent(current + 1);
       } else {
+        // 퀴즈 완료 추적
+        track('quiz_completed', {
+          score: isCorrect ? score + 1 : score,
+          total: shuffledQuestions.length
+        });
         setStep("result");
       }
     }, 1000);
@@ -181,7 +195,10 @@ export default function Home() {
             {/* CTA 버튼 */}
             <div className="px-4 flex-shrink-0">
               <button
-                onClick={() => setStep("quiz")}
+                onClick={() => {
+                  track('quiz_started');
+                  setStep("quiz");
+                }}
                 className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 active:scale-95"
               >
                 🎯 테스트 시작하기
@@ -363,6 +380,8 @@ export default function Home() {
               <div className="space-y-2">
                 <button
                   onClick={() => {
+                    track('result_shared', { score });
+                    
                     const shareText = `난 ${score}점, 넌 몇점? 👀 내 "AI 구분력 점수" 확인하고 너도 테스트 해봐!`;
                     const pageUrl = window.location.href;
 
@@ -383,7 +402,10 @@ export default function Home() {
                 </button>
                 
                 <button
-                  onClick={handleRestart}
+                  onClick={() => {
+                    track('quiz_restarted');
+                    handleRestart();
+                  }}
                   className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white px-6 py-3 rounded-2xl font-bold text-base shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 active:scale-95"
                 >
                   다시 도전하기
@@ -398,6 +420,7 @@ export default function Home() {
           </div>
         )}
       </main>
+      <Analytics />
     </div>
   );
 }
