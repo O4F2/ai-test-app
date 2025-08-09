@@ -152,8 +152,14 @@ export default function Home() {
                 <div className="flex-1 bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/20 shadow-xl transform rotate-[-2deg]">
                   <div className="text-4xl mb-2">🤖</div>
                   <div className="text-sm font-bold text-gray-800 mb-1">AI 생성</div>
-                  <div className="w-full h-24 bg-gradient-to-br from-purple-200 to-indigo-300 rounded-lg flex items-center justify-center">
-                    <span className="text-xs text-gray-600">AI 이미지</span>
+                  <div className="w-full h-24 rounded-lg overflow-hidden">
+                    <Image
+                      src="/ai-creation/image1.jpg"
+                      alt="AI 생성 이미지 예시"
+                      width={120}
+                      height={96}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 </div>
 
@@ -166,8 +172,14 @@ export default function Home() {
                 <div className="flex-1 bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/20 shadow-xl transform rotate-[2deg]">
                   <div className="text-4xl mb-2">👨‍💻</div>
                   <div className="text-sm font-bold text-gray-800 mb-1">인간 창작</div>
-                  <div className="w-full h-24 bg-gradient-to-br from-pink-200 to-red-300 rounded-lg flex items-center justify-center">
-                    <span className="text-xs text-gray-600">인간 이미지</span>
+                  <div className="w-full h-24 rounded-lg overflow-hidden">
+                    <Image
+                      src="/human-creation/image1.jpg"
+                      alt="인간 창작 이미지 예시"
+                      width={120}
+                      height={96}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 </div>
               </div>
@@ -182,7 +194,7 @@ export default function Home() {
                 🎯 테스트 시작하기
               </button>
               <p className="text-center text-white/60 text-xs mt-2">
-                총 12문제 · 약 2분 소요
+                총 12문제 · 약 1분 소요
               </p>
             </div>
           </div>
