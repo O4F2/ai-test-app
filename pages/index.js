@@ -1,6 +1,7 @@
 // pages/index.js
 import { useState, useEffect } from "react";
 import Head from 'next/head'; // Head 태그 관리를 위해 import
+import Image from 'next/image'; // Next.js Image 컴포넌트 import
 
 // 폴더 기반 문제 생성 함수 (기존과 동일)
 const generateQuestions = () => {
@@ -163,10 +164,13 @@ export default function Home() {
               <div className="relative w-full max-w-md">
                 <div className="bg-white rounded-3xl shadow-2xl p-6 mx-4 transform hover:rotate-1 transition-transform duration-300 border-4 border-white/50">
                   <div className="relative">
-                    <img
+                    <Image
                       src={shuffledQuestions[current].content}
                       alt="문제 이미지"
+                      width={400}
+                      height={384}
                       className="w-full h-96 object-cover rounded-2xl shadow-md"
+                      priority
                     />
                   </div>
                   
@@ -282,7 +286,7 @@ export default function Home() {
                   }
                   {score > 9 && 
                       <>
-                          완벽합니다! 당신은 상위 1%의 '진짜' 인간입니다.
+                          완벽합니다! 당신은 상위 1%의 &lsquo;진짜&rsquo; 인간입니다.
                           <br />
                           친구들에게 당신의 AI 구분 능력을 자랑하세요!
                       </>
