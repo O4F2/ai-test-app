@@ -34,7 +34,7 @@ const generateQuestions = () => {
 
 // ** AdBanner 컴포넌트 **
 // 구글 광고를 표시하기 위한 전용 컴포넌트입니다.
-const AdBanner = ({client, slot, format = "auto", responsive = "true"}) => {
+const AdBanner = () => {
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -44,13 +44,16 @@ const AdBanner = ({client, slot, format = "auto", responsive = "true"}) => {
   }, []);
 
   return (
-    <div className="mt-8 bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center text-sm text-gray-600 max-w-md mx-4 border border-white/30">
-        <ins className="adsbygoogle"
-            style={{ display: "block" }}
-            data-ad-client={client}
-            data-ad-slot={slot}
-            data-ad-format={format}
-            data-full-width-responsive={responsive}></ins>
+    <div className="mt-8 bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center max-w-md mx-4 border border-white/30">
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7545352297994538"
+           crossOrigin="anonymous"></script>
+      {/* ad1 */}
+      <ins className="adsbygoogle"
+           style={{display:"block"}}
+           data-ad-client="ca-pub-7545352297994538"
+           data-ad-slot="2445419028"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
     </div>
   );
 };
@@ -330,10 +333,7 @@ export default function Home() {
             </div>
 
             {/* 광고 영역 */}
-            <AdBanner 
-              client="ca-pub-7545352297994538"
-              slot="YYYYYYYYYY" // 실제 ad-slot ID로 교체 필요
-            />
+            <AdBanner />
           </div>
         )}
       </main>
