@@ -110,7 +110,7 @@ export default function Home() {
         {/* 구글 애드센스 스크립트 */}
         <script 
           async 
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" // 본인의 ca-pub- ID로 교체
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7545352297994538"
           crossOrigin="anonymous"
         ></script>
       </Head>
@@ -331,8 +331,8 @@ export default function Home() {
 
             {/* 광고 영역 */}
             <AdBanner 
-              client="ca-pub-XXXXXXXXXXXXXXXX" // 본인의 ca-pub- ID로 교체
-              slot="YYYYYYYYYY" // 본인의 ad-slot ID로 교체
+              client="ca-pub-7545352297994538"
+              slot="YYYYYYYYYY" // 실제 ad-slot ID로 교체 필요
             />
           </div>
         )}
