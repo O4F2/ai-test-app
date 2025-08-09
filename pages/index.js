@@ -1,12 +1,13 @@
 // pages/index.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Head from 'next/head'; // Head 태그 관리를 위해 import
 
-// 폴더 기반 문제 생성 함수
+// 폴더 기반 문제 생성 함수 (기존과 동일)
 const generateQuestions = () => {
   const questions = [];
   
-  // AI 생성 이미지 (ai-creation 폴더에서 5개)
-  for (let i = 1; i <= 5; i++) {
+  // AI 생성 이미지 (ai-creation 폴더에서 6개로 수정)
+  for (let i = 1; i <= 6; i++) {
     questions.push({
       id: i,
       type: "image",
@@ -16,10 +17,10 @@ const generateQuestions = () => {
   }
 
   
-  // 인간 창작 이미지 (human-creation 폴더에서 5개)  
-  for (let i = 1; i <= 5; i++) {
+  // 인간 창작 이미지 (human-creation 폴더에서 6개로 수정)  
+  for (let i = 1; i <= 6; i++) {
     questions.push({
-      id: i + 5,
+      id: i + 6,
       type: "image", 
       content: `/human-creation/image${i}.jpg`,
       answer: "human"
@@ -30,6 +31,30 @@ const generateQuestions = () => {
   return questions.sort(() => Math.random() - 0.5);
 };
 
+// ** AdBanner 컴포넌트 **
+// 구글 광고를 표시하기 위한 전용 컴포넌트입니다.
+const AdBanner = ({client, slot, format = "auto", responsive = "true"}) => {
+  useEffect(() => {
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.error("Adsense error:", e);
+    }
+  }, []);
+
+  return (
+    <div className="mt-8 bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center text-sm text-gray-600 max-w-md mx-4 border border-white/30">
+        <ins className="adsbygoogle"
+            style={{ display: "block" }}
+            data-ad-client={client}
+            data-ad-slot={slot}
+            data-ad-format={format}
+            data-full-width-responsive={responsive}></ins>
+    </div>
+  );
+};
+
+
 const questions = generateQuestions();
 
 export default function Home() {
@@ -38,21 +63,37 @@ export default function Home() {
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState(null);
   const [showResultIcon, setShowResultIcon] = useState(null); // "O" | "X"
+  const [shuffledQuestions, setShuffledQuestions] = useState([]);
+
+  // 컴포넌트가 처음 로드될 때 문제를 한번만 섞습니다.
+  useEffect(() => {
+    setShuffledQuestions(generateQuestions());
+  }, []);
+  
+  // 다시 시작하기 함수
+  const handleRestart = () => {
+    setStep("intro");
+    setCurrent(0);
+    setScore(0);
+    setSelected(null);
+    setShowResultIcon(null);
+    // 다시 시작할 때 문제를 새로 섞어줍니다.
+    setShuffledQuestions(generateQuestions());
+  }
 
   const handleAnswer = (choice) => {
-    if (selected) return; // 이미 선택한 경우 클릭 방지
+    if (selected) return;
     setSelected(choice);
 
-    const isCorrect = choice === questions[current].answer;
+    const isCorrect = choice === shuffledQuestions[current].answer;
     if (isCorrect) setScore(score + 1);
 
     setShowResultIcon(isCorrect ? "O" : "X");
 
-    // 1초 후 다음 문제로 이동 (설명이 없으므로 더 빠르게)
     setTimeout(() => {
       setShowResultIcon(null);
       setSelected(null);
-      if (current + 1 < questions.length) {
+      if (current + 1 < shuffledQuestions.length) {
         setCurrent(current + 1);
       } else {
         setStep("result");
@@ -62,13 +103,24 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400 via-red-400 to-orange-400 flex flex-col">
-      {/* 상단 고정 헤더 */}
+       <Head>
+        <title>AI 구분력 테스트 - AI vs 인간</title>
+        <meta name="description" content="AI가 만든 창작물과 인간의 창작물을 구별해보세요! 당신의 AI 구분력 점수는?" />
+        {/* 구글 애드센스 스크립트 */}
+        <script 
+          async 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" // 본인의 ca-pub- ID로 교체
+          crossOrigin="anonymous"
+        ></script>
+      </Head>
+      
+      {/* (헤더, 인트로, 퀴즈 부분은 기존 코드와 동일하여 생략) */}
       <header className="fixed top-0 left-0 w-full bg-gradient-to-r from-pink-500 to-red-500 shadow-lg p-4 text-center font-bold text-xl text-white z-50">
         AI 구분력 테스트
       </header>
 
       <main className="flex-1 flex flex-col mt-20 px-4 pb-4 max-w-lg mx-auto w-full">
-        {step === "intro" && (
+      {step === "intro" && (
           <div className="flex flex-col items-center justify-center flex-1">
             <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-8 text-center max-w-md mx-4 border border-white/20">
               <div className="mb-6">
@@ -90,18 +142,18 @@ export default function Home() {
           </div>
         )}
 
-        {step === "quiz" && (
+        {step === "quiz" && shuffledQuestions.length > 0 && (
           <div className="flex flex-col flex-1 py-4">
             {/* 진행도 표시 */}
             <div className="mb-6">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-sm text-white/80 font-medium">문제 {current + 1}</span>
-                <span className="text-sm text-white/80 font-medium">{questions.length}개 중</span>
+                <span className="text-sm text-white/80 font-medium">{shuffledQuestions.length}개 중</span>
               </div>
               <div className="w-full bg-white/30 rounded-full h-3 backdrop-blur-sm">
                 <div 
                   className="bg-gradient-to-r from-yellow-300 to-pink-300 h-3 rounded-full transition-all duration-500 shadow-sm"
-                  style={{ width: `${((current + 1) / questions.length) * 100}%` }}
+                  style={{ width: `${((current + 1) / shuffledQuestions.length) * 100}%` }}
                 ></div>
               </div>
             </div>
@@ -112,7 +164,7 @@ export default function Home() {
                 <div className="bg-white rounded-3xl shadow-2xl p-6 mx-4 transform hover:rotate-1 transition-transform duration-300 border-4 border-white/50">
                   <div className="relative">
                     <img
-                      src={questions[current].content}
+                      src={shuffledQuestions[current].content}
                       alt="문제 이미지"
                       className="w-full h-96 object-cover rounded-2xl shadow-md"
                     />
@@ -135,7 +187,7 @@ export default function Home() {
                 disabled={selected !== null}
                 className={`flex-1 max-w-36 py-4 px-4 rounded-2xl shadow-xl font-bold transition-all duration-300 transform flex flex-col items-center gap-2 ${
                   selected === "AI"
-                    ? selected === questions[current].answer
+                    ? selected === shuffledQuestions[current].answer
                       ? "bg-green-500 text-white scale-105 shadow-green-500/50"
                       : "bg-red-500 text-white scale-105 shadow-red-500/50"
                     : "bg-gradient-to-br from-purple-500 to-indigo-600 text-white hover:scale-105 hover:shadow-purple-500/50 active:scale-95"
@@ -150,7 +202,7 @@ export default function Home() {
                 disabled={selected !== null}
                 className={`flex-1 max-w-36 py-4 px-4 rounded-2xl shadow-xl font-bold transition-all duration-300 transform flex flex-col items-center gap-2 ${
                   selected === "human"
-                    ? selected === questions[current].answer
+                    ? selected === shuffledQuestions[current].answer
                       ? "bg-green-500 text-white scale-105 shadow-green-500/50"
                       : "bg-red-500 text-white scale-105 shadow-red-500/50"
                     : "bg-gradient-to-br from-pink-500 to-red-500 text-white hover:scale-105 hover:shadow-pink-500/50 active:scale-95"
@@ -175,99 +227,96 @@ export default function Home() {
             )}
           </div>
         )}
-
+        
         {step === "result" && (
           <div className="flex flex-col items-center justify-center flex-1 py-8">
             <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-8 text-center max-w-md mx-4 border border-white/20">
-              {/* 결과 애니메이션 */}
-              <div className="mb-6">
+               {/* 바이럴 문구와 점수 표시 (기존 코드와 거의 동일, 12문제 기준으로 변경) */}
+               <div className="mb-6">
                 <div className="text-6xl mb-4 animate-pulse">
-                  {score <= 2 && "🤖"}
-                  {score > 2 && score <= 5 && "👀"}
-                  {score > 5 && score <= 8 && "🕵️‍♂️"}
-                  {score > 8 && "🧠"}
+                  {score <= 3 && "🤖"}
+                  {score > 3 && score <= 6 && "👀"}
+                  {score > 6 && score <= 9 && "🧐"}
+                  {score > 9 && "👑"}
                 </div>
                 
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  당신의 AI 구분력!
+                  당신의 AI 구분력 점수는?
                 </h2>
                 
                 <div className="relative mb-4">
                   <div className="text-5xl font-bold bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">
-                    {score} / {questions.length}
+                    {score} / {shuffledQuestions.length}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">점수</div>
                 </div>
                 
                 <div className="bg-gradient-to-r from-pink-100 to-red-100 rounded-2xl p-4 mb-4">
                   <p className="text-lg font-bold text-gray-800 mb-2">
-                    {score <= 2 && "🤖 AI 찬양자"}
-                    {score > 2 && score <= 5 && "👀 초보 탐지자"}
-                    {score > 5 && score <= 8 && "🕵️‍♂️ 숙련자"}
-                    {score > 8 && "🧠 AI 탐지 마스터"}
+                    {score <= 3 && "AI 노예"}
+                    {score > 3 && score <= 6 && "매트릭스 거주자"}
+                    {score > 6 && score <= 9 && "AI 지배자"}
+                    {score > 9 && "AI 감별사"}
                   </p>
                   <p className="text-gray-600 text-sm leading-relaxed">
                   {score <= 3 && 
-        <>
-            혹시... AI세요? AI가 보여주는 세상을 100% 신뢰하는 당신,
-            <br />
-            AI에게 지배당하지 않도록 조심하세요!
-        </>
-    }
-    {score > 3 && score <= 6 && 
-        <>
-            진실과 거짓의 경계에서 아슬아슬 줄타기 중!
-            <br />
-            친구는 진짜 인간인지 꼭 확인해보세요.
-        </>
-    }
-    {score > 6 && score <= 9 && 
-        <>
-            웬만한 AI는 당신의 눈을 속일 수 없군요.
-            <br />
-            AI 개발자들이 당신의 테스트 결과를 두려워합니다.
-        </>
-    }
-    {score > 9 && 
-        <>
-            완벽합니다! 당신은 상위 1%의 '진짜' 인간입니다.
-            <br />
-            친구들에게 당신의 생존 능력을 자랑하세요!
-        </>
-    }
+                    <>
+                        혹시... AI세요? AI가 보여주는 세상을 100% 신뢰하는 당신,
+                        <br />
+                        AI에게 지배당하지 않도록 조심하세요!
+                    </>
+                  }
+                  {score > 3 && score <= 6 && 
+                      <>
+                          진실과 거짓의 경계에서 아슬아슬 줄타기 중!
+                          <br />
+                          친구는 진짜 인간인지 꼭 확인해보세요.
+                      </>
+                  }
+                  {score > 6 && score <= 9 && 
+                      <>
+                          웬만한 AI는 당신의 눈을 속일 수 없군요.
+                          <br />
+                          AI 개발자들이 당신의 테스트 결과를 두려워합니다.
+                      </>
+                  }
+                  {score > 9 && 
+                      <>
+                          완벽합니다! 당신은 상위 1%의 '진짜' 인간입니다.
+                          <br />
+                          친구들에게 당신의 AI 구분 능력을 자랑하세요!
+                      </>
+                  }
                   </p>
                 </div>
               </div>
+
 
               {/* 액션 버튼들 */}
               <div className="space-y-3">
                 <button
                   onClick={() => {
-                    const shareText = `나는 AI 구분력 테스트에서 ${score}/${questions.length}점을 받았어요! 당신도 도전해보세요!`;
+                    const shareText = `난 ${score}점, 넌 몇점? 👀 내 'AI 구분력 점수' 확인하고 너도 테스트 해봐!`;
+                    const pageUrl = window.location.href;
+
                     if (navigator.share) {
                       navigator.share({
-                        title: "AI 구분력 테스트 결과",
+                        title: "AI 구분력 테스트",
                         text: shareText,
-                        url: window.location.href
-                      });
+                        url: pageUrl
+                      }).catch(console.error);
                     } else {
-                      navigator.clipboard.writeText(`${shareText}\n${window.location.href}`);
-                      alert("결과가 클립보드에 복사되었습니다!");
+                      navigator.clipboard.writeText(`${shareText}\n${pageUrl}`);
+                      alert("결과가 클립보드에 복사되었어요. 친구에게 붙여넣기 해주세요!");
                     }
                   }}
                   className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 active:scale-95"
                 >
-                  친구들에게 자랑하기
+                  결과 공유하고 친구 놀리기
                 </button>
                 
                 <button
-                  onClick={() => {
-                    setStep("intro");
-                    setCurrent(0);
-                    setScore(0);
-                    setSelected(null);
-                    setShowResultIcon(null);
-                  }}
+                  onClick={handleRestart}
                   className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white px-6 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 active:scale-95"
                 >
                   다시 도전하기
@@ -276,10 +325,10 @@ export default function Home() {
             </div>
 
             {/* 광고 영역 */}
-            <div className="mt-8 bg-white/80 backdrop-blur-sm p-4 rounded-2xl text-center text-sm text-gray-600 max-w-md mx-4 border border-white/30">
-              <div className="text-pink-500 font-medium mb-1">광고</div>
-              <div>더 많은 재밌는 테스트가 곧 찾아와요!</div>
-            </div>
+            <AdBanner 
+              client="ca-pub-XXXXXXXXXXXXXXXX" // 본인의 ca-pub- ID로 교체
+              slot="YYYYYYYYYY" // 본인의 ad-slot ID로 교체
+            />
           </div>
         )}
       </main>
