@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Head from 'next/head'; // Head 태그 관리를 위해 import
 import Image from 'next/image'; // Next.js Image 컴포넌트 import
+import Link from 'next/link'; // Next.js Link 컴포넌트 import
 import { Analytics } from '@vercel/analytics/next';
 import { track } from '@vercel/analytics';
 
@@ -134,9 +135,16 @@ export default function Home() {
         ></script>
       </Head>
       
-      {/* (헤더, 인트로, 퀴즈 부분은 기존 코드와 동일하여 생략) */}
-      <header className="fixed top-0 left-0 w-full bg-gradient-to-r from-pink-500 to-red-500 shadow-lg p-4 text-center font-bold text-xl text-white z-50">
-        AI 구분력 테스트
+      {/* 상단 고정 헤더 */}
+      <header className="fixed top-0 left-0 w-full bg-gradient-to-r from-pink-500 to-red-500 shadow-lg p-4 z-50">
+        <div className="flex justify-between items-center max-w-lg mx-auto">
+          <Link href="/" className="text-white font-bold text-xl hover:text-pink-100 transition-colors">
+            AI 구분력 테스트
+          </Link>
+          <Link href="/about" className="text-white/80 text-sm hover:text-white transition-colors">
+            서비스 소개
+          </Link>
+        </div>
       </header>
 
       <main className="flex-1 flex flex-col mt-20 px-2 pb-4 max-w-lg mx-auto w-full">
@@ -420,6 +428,18 @@ export default function Home() {
           </div>
         )}
       </main>
+      
+      {/* Footer */}
+      <footer className="bg-black/20 text-white text-center py-4 mt-8">
+        <div className="max-w-lg mx-auto px-4">
+          <p className="text-sm mb-2">Copyright © 2025 emergencylabs</p>
+          <div className="flex justify-center gap-4 text-xs">
+            <Link href="/" className="hover:text-pink-200 transition-colors">메인으로</Link>
+            <Link href="/about" className="hover:text-pink-200 transition-colors">서비스 소개</Link>
+          </div>
+        </div>
+      </footer>
+      
       <Analytics />
     </div>
   );
