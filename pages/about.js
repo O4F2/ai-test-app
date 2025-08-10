@@ -48,7 +48,7 @@ export default function About() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-pink-500 font-bold mr-3">2.</span>
-                    <span>각 이미지를 보고 'AI 생성' 또는 '인간 창작' 중 하나를 선택합니다</span>
+                    <span>각 이미지를 보고 &lsquo;AI 생성&rsquo; 또는 &lsquo;인간 창작&rsquo; 중 하나를 선택합니다</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-pink-500 font-bold mr-3">3.</span>
@@ -83,7 +83,7 @@ export default function About() {
                 <div className="bg-yellow-50 p-6 rounded-2xl">
                   <h3 className="text-xl font-bold text-yellow-800 mb-3">💡 직관 믿기</h3>
                   <p>때로는 논리적 분석보다 첫 느낌이 정확할 수 있습니다. 
-                  '뭔가 이상하다'는 직감을 무시하지 마세요.</p>
+                  &lsquo;뭔가 이상하다&rsquo;는 직감을 무시하지 마세요.</p>
                 </div>
               </div>
             </section>
@@ -116,7 +116,7 @@ export default function About() {
                   <span className="text-2xl mr-4">👑</span>
                   <div>
                     <strong>AI 감별사 (10-12점)</strong>
-                    <p className="text-sm text-gray-600">완벽합니다! 당신은 상위 1%의 '진짜' 인간입니다!</p>
+                    <p className="text-sm text-gray-600">완벽합니다! 당신은 상위 1%의 &lsquo;진짜&rsquo; 인간입니다!</p>
                   </div>
                 </div>
               </div>
