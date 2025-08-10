@@ -149,11 +149,8 @@ export default function About() {
       {/* Footer */}
       <footer className="bg-black/20 text-white text-center py-6 mt-12">
         <div className="max-w-4xl mx-auto px-4">
-          <p className="mb-2">Copyright © 2025 emergencylabs</p>
-          <div className="flex justify-center gap-6 text-sm">
-            <Link href="/" className="hover:text-pink-200 transition-colors">메인으로</Link>
-            <Link href="/about" className="hover:text-pink-200 transition-colors">서비스 소개</Link>
-          </div>
+          <p className="text-sm mb-2">Copyright © 2025 emergencylabs</p>
+          <Link href="/about" className="text-xs hover:text-pink-200 transition-colors">서비스 소개</Link>
         </div>
       </footer>
     </div>

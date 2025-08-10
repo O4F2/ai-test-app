@@ -136,15 +136,10 @@ export default function Home() {
       </Head>
       
       {/* 상단 고정 헤더 */}
-      <header className="fixed top-0 left-0 w-full bg-gradient-to-r from-pink-500 to-red-500 shadow-lg p-4 z-50">
-        <div className="flex justify-between items-center max-w-lg mx-auto">
-          <Link href="/" className="text-white font-bold text-xl hover:text-pink-100 transition-colors">
-            AI 구분력 테스트
-          </Link>
-          <Link href="/about" className="text-white/80 text-sm hover:text-white transition-colors">
-            서비스 소개
-          </Link>
-        </div>
+      <header className="fixed top-0 left-0 w-full bg-gradient-to-r from-pink-500 to-red-500 shadow-lg p-4 text-center font-bold text-xl text-white z-50">
+        <Link href="/" className="hover:text-pink-100 transition-colors">
+          AI 구분력 테스트
+        </Link>
       </header>
 
       <main className="flex-1 flex flex-col mt-20 px-2 pb-4 max-w-lg mx-auto w-full">
@@ -433,10 +428,7 @@ export default function Home() {
       <footer className="bg-black/20 text-white text-center py-4 mt-8">
         <div className="max-w-lg mx-auto px-4">
           <p className="text-sm mb-2">Copyright © 2025 emergencylabs</p>
-          <div className="flex justify-center gap-4 text-xs">
-            <Link href="/" className="hover:text-pink-200 transition-colors">메인으로</Link>
-            <Link href="/about" className="hover:text-pink-200 transition-colors">서비스 소개</Link>
-          </div>
+          <Link href="/about" className="text-xs hover:text-pink-200 transition-colors">서비스 소개</Link>
         </div>
       </footer>
       
